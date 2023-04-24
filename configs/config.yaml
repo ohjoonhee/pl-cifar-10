@@ -1,0 +1,26 @@
+seed: 42
+  
+defaults:
+  - dataset: cifar10
+  - model: resnet18_modi 
+  - module: default
+  - optimizer: sgd
+  - logger: wandb
+  - paths: default
+  - callbacks: default
+  - trainer: gpu
+  - transforms: crop
+  - experiment: null
+  - _self_
+    
+dataset:
+  batch_size: 128
+    
+trainer:
+  precision: 16
+  max_epochs: 250
+  # auto_lr_find: true
+
+optimizer:
+  optimizer:
+    lr: 0.03

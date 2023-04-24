@@ -1,0 +1,14 @@
+# vscode settings
+.vscode
+
+# data files
+data
+
+# outputs
+artifacts
+outputs
+wandb
+
+
+# pycache
+__pycache__

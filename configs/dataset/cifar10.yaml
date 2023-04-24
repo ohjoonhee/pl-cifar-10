@@ -1,0 +1,4 @@
+_target_: dataset.cifar10.Cifar10DataModule
+root: ${hydra:runtime.cwd}/data
+batch_size: 32
+val_split: 0.1
