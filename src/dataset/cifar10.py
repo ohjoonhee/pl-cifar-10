@@ -4,8 +4,6 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from torch.utils.data import Subset, DataLoader
 from torchvision.datasets import CIFAR10
 
-# import pytorch_lightning as pl
-# from pytorch_lightning.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
 
 import lightning as L
 from lightning.pytorch.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
