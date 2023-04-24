@@ -1,5 +1,0 @@
-defaults:
-  - rich_progress
-  - lr_monitor
-  # - swa
-  - model_checkpoint

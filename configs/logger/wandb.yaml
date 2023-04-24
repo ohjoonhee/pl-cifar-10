@@ -1,5 +1,0 @@
-_target_: pytorch_lightning.loggers.wandb.WandbLogger
-entity: ohjoonhee1214
-project: pl-cifar-10
-save_dir: ${paths.output_dir}
-log_model: all

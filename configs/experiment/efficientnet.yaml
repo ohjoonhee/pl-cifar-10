@@ -1,9 +1,0 @@
-# @package _global_
-
-defaults:
-  - override /model: efficient.yaml
-
-    
-
-dataset:
-  batch_size: 512

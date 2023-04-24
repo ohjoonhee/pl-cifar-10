@@ -1,26 +1,66 @@
-seed: 42
-  
-defaults:
-  - dataset: cifar10
-  - model: resnet18_modi 
-  - module: default
-  - optimizer: sgd
-  - logger: wandb
-  - paths: default
-  - callbacks: default
-  - trainer: gpu
-  - transforms: crop
-  - experiment: null
-  - _self_
-    
-dataset:
-  batch_size: 128
-    
+# lightning.pytorch==2.0.0
+seed_everything: 42
 trainer:
-  precision: 16
-  max_epochs: 250
-  # auto_lr_find: true
+  accelerator: auto
+  strategy: auto
+  devices: auto
+  num_nodes: 1
+  precision: 32-true
+  logger: null
+  callbacks: null
+  fast_dev_run: false
+  max_epochs: null
+  min_epochs: null
+  max_steps: -1
+  min_steps: null
+  max_time: null
+  limit_train_batches: null
+  limit_val_batches: null
+  limit_test_batches: null
+  limit_predict_batches: null
+  overfit_batches: 0.0
+  val_check_interval: null
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: null
+  log_every_n_steps: null
+  enable_checkpointing: null
+  enable_progress_bar: null
+  enable_model_summary: null
+  accumulate_grad_batches: 1
+  gradient_clip_val: null
+  gradient_clip_algorithm: null
+  deterministic: null
+  benchmark: null
+  inference_mode: true
+  use_distributed_sampler: true
+  profiler: null
+  detect_anomaly: false
+  barebones: false
+  plugins: null
+  sync_batchnorm: false
+  reload_dataloaders_every_n_epochs: 0
+  default_root_dir: null
+model:
+  model:
+    class_path: model.resnet_modi.Cifar10Resnet18
+    init_args:
+      num_classes: 10
+
+  loss_module:
+    class_path: CrossEntropyLoss
+
+  metric_module:
+    class_path: Accuracy
+
+data:
+  root: data
+  batch_size: 64
+  val_split: 0.1
+  transforms:
+    class_path: transforms.default.DefaultTransforms
 
 optimizer:
-  optimizer:
-    lr: 0.03
+  class_path: Adam
+  init_args:
+    lr: 0.1
+ckpt_path: null

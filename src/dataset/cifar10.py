@@ -1,26 +1,34 @@
+from typing import Union
+
 from sklearn.model_selection import StratifiedShuffleSplit
 from torch.utils.data import Subset, DataLoader
 from torchvision.datasets import CIFAR10
 
-import pytorch_lightning as pl
-from pytorch_lightning.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
+# import pytorch_lightning as pl
+# from pytorch_lightning.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
+
+import lightning as L
+from lightning.pytorch.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
+
+from transforms.base import BaseTransforms
 
 
-class Cifar10DataModule(pl.LightningDataModule):
+class Cifar10DataModule(L.LightningDataModule):
     def __init__(
         self,
-        root="../data",
-        batch_size=32,
-        val_split=0.1,
-        train_transform=None,
-        val_transform=None,
-        test_transform=None,
+        root: str,
+        batch_size: int,
+        val_split: Union[int, float],
+        # train_transform=None,
+        # val_transform=None,
+        # test_transform=None,
+        transforms: BaseTransforms,
     ) -> None:
         super().__init__()
         self.root = root
-        self.train_transform = train_transform
-        self.val_transform = val_transform
-        self.test_transform = test_transform
+        self.train_transform = transforms.train_transform()
+        self.val_transform = transforms.val_transform()
+        self.test_transform = transforms.test_transform()
         self.val_split = val_split
         self.batch_size = batch_size
 

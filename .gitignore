@@ -8,6 +8,7 @@ data
 artifacts
 outputs
 wandb
+lightning_logs
 
 
 # pycache

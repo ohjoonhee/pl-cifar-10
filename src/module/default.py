@@ -6,29 +6,34 @@ from hydra.utils import instantiate
 import torch
 from torch import nn
 
-import pytorch_lightning as pl
+# import pytorch_lightning as pl
+import lightning as L
 
 from torchmetrics import Accuracy
 
-from utils import buildlib
 
+class LitCifar10(L.LightningModule):
+    def __init__(
+        self,
+        model: nn.Module,
+        loss_module: nn.Module,
+        metric_module: nn.Module,
+    ) -> None:
+        super().__init__()
 
-class LitCifar10(buildlib.BuiltLightningModule):
-    def __init__(self, cfg) -> None:
-        super().__init__(cfg)
+        self.model = model
 
-        self.save_hyperparameters(
-            OmegaConf.to_container(self.cfg, resolve=True, throw_on_missing=True)
-        )
+        self.loss_module = loss_module
+        self.metric_module = metric_module
 
-        self.loss_func = nn.CrossEntropyLoss()
-        self.metric_func = Accuracy()
+    def forward(self, x):
+        return self.model(x)
 
     def training_step(self, batch, batch_idx):
         img, labels = batch
         pred = self(img)
 
-        loss = self.loss_func(pred, labels)
+        loss = self.loss_module(pred, labels)
         self.log("train/loss", loss.item())
 
         return loss
@@ -37,16 +42,15 @@ class LitCifar10(buildlib.BuiltLightningModule):
         img, labels = batch
         pred = self(img)
 
-        loss = self.loss_func(pred, labels)
+        loss = self.loss_module(pred, labels)
         self.log("val/loss", loss.item())
 
-        acc = self.metric_func(pred, labels)
+        acc = self.metric_module(pred, labels)
         self.log("val/acc", acc)
-        self.log("val_acc", acc)
 
     def test_step(self, batch, batch_idx):
         img, labels = batch
         pred = self(img)
 
-        acc = self.metric_func(pred, labels)
+        acc = self.metric_module(pred, labels)
         self.log("test/acc", acc)
