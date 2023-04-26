@@ -1,6 +1,6 @@
 # lightning.pytorch==2.0.0
-name: resnet-reproduce
-version: version_0
+name: debug-py-artifact-default
+version: version_2
 
 seed_everything: 42
 trainer:
@@ -25,7 +25,7 @@ data:
   batch_size: 128
   val_split: 0.1
   transforms:
-    class_path: ReflectCropTransforms
+    class_path: DefaultTransforms
 
 optimizer:
   class_path: SGD

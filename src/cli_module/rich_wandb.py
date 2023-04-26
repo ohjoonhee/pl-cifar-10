@@ -1,10 +1,12 @@
 import os
 import os.path as osp
+import inspect
 
 import json
+import wandb
 from lightning.pytorch.loggers import WandbLogger
-
 from lightning.pytorch.cli import LightningArgumentParser
+
 
 from .rich import RichCLI
 
@@ -49,6 +51,18 @@ class RichWandbCLI(RichCLI):
             )
             self.trainer.logger.experiment.config.update(dict_config)
             print("Config uploaded to Wandb!!!")
+
+            run_id = self.trainer.logger.version
+            artifacts = wandb.Artifact(f"src-{run_id}", type="source-code")
+
+            if hasattr(self.datamodule, "transforms"):
+                transform_module = self.datamodule.transforms.__class__
+                transform_filepath = osp.abspath(
+                    inspect.getsourcefile(transform_module)
+                )
+                artifacts.add_file(transform_filepath, f"src-{run_id}/transforms.py")
+
+            wandb.log_artifact(artifacts)
 
     def before_instantiate_classes(self) -> None:
         # Dividing directories into subcommand (e.g. fit, validate, test, etc...)

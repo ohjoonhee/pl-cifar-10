@@ -24,6 +24,7 @@ class Cifar10DataModule(L.LightningDataModule):
     ) -> None:
         super().__init__()
         self.root = root
+        self.transforms = transforms
         self.train_transform = transforms.train_transform()
         self.val_transform = transforms.val_transform()
         self.test_transform = transforms.test_transform()
