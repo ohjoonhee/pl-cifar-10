@@ -7,20 +7,20 @@ import lightning as L
 class LitCifar10(L.LightningModule):
     def __init__(
         self,
-        model: nn.Module,
+        net: nn.Module,
         loss_module: nn.Module,
         metric_module: nn.Module,
     ) -> None:
         super().__init__()
         self.save_hyperparameters(ignore=["model", "loss_module", "metric_module"])
 
-        self.model = model
+        self.net = net
 
         self.loss_module = loss_module
         self.metric_module = metric_module
 
     def forward(self, x):
-        return self.model(x)
+        return self.net(x)
 
     def training_step(self, batch, batch_idx):
         img, labels = batch

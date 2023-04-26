@@ -1,5 +1,5 @@
 # lightning.pytorch==2.0.0
-name: debug-py-artifact-default
+name: debug-net
 version: version_2
 
 seed_everything: 42
@@ -9,7 +9,7 @@ trainer:
   max_epochs: 300
 
 model:
-  model:
+  net:
     class_path: Cifar10Resnet18
     init_args:
       num_classes: 10
