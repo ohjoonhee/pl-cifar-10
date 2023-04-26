@@ -55,12 +55,19 @@ class RichWandbCLI(RichCLI):
             run_id = self.trainer.logger.version
             artifacts = wandb.Artifact(f"src-{run_id}", type="source-code")
 
+            if hasattr(self.model, "net"):
+                net_module = self.model.net.__class__
+                net_filepath = osp.abspath(inspect.getsourcefile(net_module))
+                artifacts.add_file(net_filepath, f"src-{run_id}/net.py")
+                print("Model.net source code added to artifacts!!!")
+
             if hasattr(self.datamodule, "transforms"):
                 transform_module = self.datamodule.transforms.__class__
                 transform_filepath = osp.abspath(
                     inspect.getsourcefile(transform_module)
                 )
                 artifacts.add_file(transform_filepath, f"src-{run_id}/transforms.py")
+                print("Transforms source code added to artifacts!!!")
 
             wandb.log_artifact(artifacts)
 

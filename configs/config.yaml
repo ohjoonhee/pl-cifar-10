@@ -1,6 +1,6 @@
 # lightning.pytorch==2.0.0
-name: debug-net
-version: version_2
+name: dev-resnet18
+version: version_3
 
 seed_everything: 42
 trainer:
