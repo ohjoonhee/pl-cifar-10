@@ -1,11 +1,12 @@
 # lightning.pytorch==2.0.0
-name: debug-test-config-rename
+name: resnet-reproduce
 version: version_0
 
 seed_everything: 42
 trainer:
-  precision: bf16
-  max_epochs: 100
+  accelerator: gpu
+  precision: 16
+  max_epochs: 300
 
 model:
   model:
@@ -21,13 +22,21 @@ model:
 
 data:
   root: data
-  batch_size: 64
+  batch_size: 128
   val_split: 0.1
   transforms:
-    class_path: transforms.default.DefaultTransforms
+    class_path: ReflectCropTransforms
 
 optimizer:
-  class_path: Adam
+  class_path: SGD
   init_args:
     lr: 0.1
+    momentum: 0.9
+    weight_decay: 5e-4
+
+lr_scheduler:
+  class_path: CosineAnnealingLR
+  init_args:
+    T_max: ${trainer.max_epochs}
+
 ckpt_path: null

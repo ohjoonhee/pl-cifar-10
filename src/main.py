@@ -8,6 +8,7 @@ from module.default import LitCifar10
 from dataset.cifar10 import Cifar10DataModule
 
 import model
+import transforms
 
 
 def cli_main():

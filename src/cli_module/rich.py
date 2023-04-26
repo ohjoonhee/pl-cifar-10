@@ -42,21 +42,3 @@ class RichCLI(LightningCLI):
         )
 
         parser.link_arguments("name", "trainer.logger.init_args.name")
-
-    # def after_fit(self):
-    #     if not osp.exists(osp.join(self.trainer.logger.save_dir, "config.yaml")):
-    #         print("`config.yaml` doens't exist!!! Skip renaming `config.yaml`...")
-
-    #     os.rename(
-    #         osp.join(self.trainer.logger.save_dir, "config.yaml"),
-    #         osp.join(self.trainer.logger.save_dir, "config_fit.yaml"),
-    #     )
-
-    # def after_test(self):
-    #     if not osp.exists(osp.join(self.trainer.logger.save_dir, "config.yaml")):
-    #         print("`config.yaml` doens't exist!!! Skip renaming `config.yaml`...")
-
-    #     os.rename(
-    #         osp.join(self.trainer.logger.save_dir, "config.yaml"),
-    #         osp.join(self.trainer.logger.save_dir, "config_test.yaml"),
-    #     )
