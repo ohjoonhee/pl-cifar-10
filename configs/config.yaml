@@ -1,10 +1,10 @@
 # lightning.pytorch==2.0.0
-name: debug-test-jobtype
-version: version_1
+name: debug-test-config-rename
+version: version_0
 
 seed_everything: 42
 trainer:
-  precision: 32-true
+  precision: bf16
   max_epochs: 100
 
 model:

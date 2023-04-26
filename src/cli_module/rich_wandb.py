@@ -48,15 +48,25 @@ class RichWandbCLI(RichCLI):
                 json.dumps(self.config[subcommand], default=lambda s: vars(s))
             )
             self.trainer.logger.experiment.config.update(dict_config)
-            # self.trainer.logger.experiment.group = self.config["subcommand"]
             print("Config uploaded to Wandb!!!")
 
     def before_instantiate_classes(self) -> None:
+        # Dividing directories into subcommand (e.g. fit, validate, test, etc...)
         subcommand = self.config["subcommand"]
-        name = self.config[subcommand]["name"]
-        version = self.config[subcommand]["version"]
-        log_dir = osp.join("logs", name, version)
-        if not osp.exists(log_dir):
-            os.makedirs(log_dir)
+        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
+        self.config[subcommand]["trainer"]["logger"]["init_args"][
+            "save_dir"
+        ] = osp.join(save_dir, subcommand)
 
+        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
+
+        self.config[subcommand]["model_ckpt"]["dirpath"] = osp.join(
+            save_dir, "checkpoints"
+        )
+
+        # Making logger save_dir to prevent wandb using /tmp/wandb
+        if not osp.exists(save_dir):
+            os.makedirs(save_dir)
+
+        # Specifying job_type of wandb.init() for quick grouping
         self.config[subcommand]["trainer"]["logger"]["init_args"].job_type = subcommand

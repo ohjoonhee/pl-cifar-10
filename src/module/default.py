@@ -4,7 +4,6 @@ from torch import nn
 import lightning as L
 
 
-
 class LitCifar10(L.LightningModule):
     def __init__(
         self,
