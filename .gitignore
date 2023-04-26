@@ -9,7 +9,11 @@ artifacts
 outputs
 wandb
 lightning_logs
+logs
 
 
 # pycache
 __pycache__
+
+# dummy files
+playground.py

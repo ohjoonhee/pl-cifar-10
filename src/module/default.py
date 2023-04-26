@@ -1,15 +1,8 @@
-from typing import Any
-
-from omegaconf import OmegaConf
-from hydra.utils import instantiate
-
 import torch
 from torch import nn
 
-# import pytorch_lightning as pl
 import lightning as L
 
-from torchmetrics import Accuracy
 
 
 class LitCifar10(L.LightningModule):
@@ -20,6 +13,7 @@ class LitCifar10(L.LightningModule):
         metric_module: nn.Module,
     ) -> None:
         super().__init__()
+        self.save_hyperparameters(ignore=["model", "loss_module", "metric_module"])
 
         self.model = model
 
@@ -43,10 +37,10 @@ class LitCifar10(L.LightningModule):
         pred = self(img)
 
         loss = self.loss_module(pred, labels)
-        self.log("val/loss", loss.item())
+        self.log("val/loss", loss.item(), on_epoch=True, on_step=False)
 
         acc = self.metric_module(pred, labels)
-        self.log("val/acc", acc)
+        self.log("val/acc", acc, on_epoch=True, on_step=False, prog_bar=True)
 
     def test_step(self, batch, batch_idx):
         img, labels = batch
