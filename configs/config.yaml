@@ -1,11 +1,11 @@
 # lightning.pytorch==2.0.0
-name: dev-resnet18
-version: version_3
+name: debug-import
+version: version_1
 
 seed_everything: 42
 trainer:
   accelerator: gpu
-  precision: 16
+  precision: 16-mixed
   max_epochs: 300
 
 model:

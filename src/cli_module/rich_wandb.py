@@ -21,10 +21,10 @@ class RichWandbCLI(RichCLI):
                     "class_path": "lightning.pytorch.loggers.WandbLogger",
                     "init_args": {
                         "project": "pl-cifar-10",
-                        "config_exclude_keys": [
-                            "rich_progress",
-                            "model_ckpt",
-                        ],  # Callbacks configs are excluded for readability
+                        # "config_exclude_keys": [
+                        #     "rich_progress",
+                        #     "model_ckpt",
+                        # ],  # Callbacks configs are excluded for readability
                     },
                 },
             }
@@ -49,7 +49,15 @@ class RichWandbCLI(RichCLI):
             dict_config = json.loads(
                 json.dumps(self.config[subcommand], default=lambda s: vars(s))
             )
-            self.trainer.logger.experiment.config.update(dict_config)
+            self.trainer.logger.experiment.config.update(
+                wandb.helper.parse_config(
+                    dict_config,
+                    exclude=(
+                        "rich_progress",
+                        "model_ckpt",
+                    ),  # exclude callbacks config for readability
+                )
+            )
             print("Config uploaded to Wandb!!!")
 
             run_id = self.trainer.logger.version

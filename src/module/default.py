@@ -12,7 +12,7 @@ class LitCifar10(L.LightningModule):
         metric_module: nn.Module,
     ) -> None:
         super().__init__()
-        self.save_hyperparameters(ignore=["model", "loss_module", "metric_module"])
+        self.save_hyperparameters(ignore=["net", "loss_module", "metric_module"])
 
         self.net = net
 
