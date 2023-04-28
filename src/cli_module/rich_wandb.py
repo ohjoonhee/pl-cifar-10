@@ -35,6 +35,9 @@ class RichWandbCLI(RichCLI):
             compute_fn=lambda *args: osp.join("logs", *args),
         )
         parser.link_arguments(
+            "version", "trainer.logger.init_args.tags", compute_fn=lambda e: [e]
+        )
+        parser.link_arguments(
             ("name", "version"),
             "model_ckpt.dirpath",
             compute_fn=lambda *args: osp.join("logs", *args, "checkpoints"),
@@ -43,6 +46,9 @@ class RichWandbCLI(RichCLI):
     def before_fit(self):
         if not isinstance(self.trainer.logger, WandbLogger):
             print("WandbLogger not found! Skipping config upload...")
+
+        elif "subcommand" not in self.config:
+            pass
 
         else:
             subcommand = self.config["subcommand"]
@@ -80,6 +86,8 @@ class RichWandbCLI(RichCLI):
             wandb.log_artifact(artifacts)
 
     def before_instantiate_classes(self) -> None:
+        if "subcommand" not in self.config:
+            return
         # Dividing directories into subcommand (e.g. fit, validate, test, etc...)
         subcommand = self.config["subcommand"]
         save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]

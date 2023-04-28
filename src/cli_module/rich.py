@@ -3,6 +3,8 @@ import os.path as osp
 
 import json
 
+import torch
+
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import (
     ModelCheckpoint,
@@ -42,3 +44,9 @@ class RichCLI(LightningCLI):
         )
 
         parser.link_arguments("name", "trainer.logger.init_args.name")
+
+    def before_run(self):
+        if hasattr(torch, "compile"):
+            torch.compile(self.model)
+
+    before_fit = before_validate = before_test = before_run
