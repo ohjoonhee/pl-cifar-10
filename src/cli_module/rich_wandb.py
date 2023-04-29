@@ -62,7 +62,8 @@ class RichWandbCLI(RichCLI):
                         "rich_progress",
                         "model_ckpt",
                     ),  # exclude callbacks config for readability
-                )
+                ),
+                allow_val_change=True,
             )
             print("Config uploaded to Wandb!!!")
 

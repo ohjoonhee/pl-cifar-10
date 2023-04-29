@@ -20,6 +20,20 @@ We assume cwd is project root dir.
 python src/main.py fit -c configs/config.yaml -n debug-fit-run -v debug-version
 ```
 
+#### Resume
+Just add the following arguments and run fit command as usual.
+```yaml
+# configs/config.yaml
+trainer:
+  logger:
+    init_args:
+      version: abcd1234 # Wandb run id of previous one's
+      resume: true
+ckpt_path: my/path/to/checkpoint.ckpt
+```
+   
+  
+
 ### `test` stage
 ```bash
 python src/main.py test -c configs/config.yaml -n debug-test-run -v debug-version --ckpt_path YOUR_CKPT_PATH
