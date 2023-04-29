@@ -20,6 +20,18 @@ We assume cwd is project root dir.
 python src/main.py fit -c configs/config.yaml -n debug-fit-run -v debug-version
 ```
 
+#### Automatic Batch Size Finder
+Just add `BatchSizeFinder` callbacks in the config
+```yaml
+trainer:
+  callbacks:
+    - class_path: BatchSizeFinder
+```
+Or add them in the cmdline.
+```bash
+python src/main.py fit -c configs/config.yaml --trainer.callbacks+=BatchSizeFinder
+```
+
 #### Resume
 Just add the following arguments and run fit command as usual.
 ```yaml

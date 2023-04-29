@@ -1,16 +1,12 @@
 # lightning.pytorch==2.0.0
-name: debug-resume
-version: version_1
+name: debug-batchsizefinder
+version: version_0
 
 seed_everything: 42
 trainer:
   accelerator: gpu
   precision: 16-mixed
   max_epochs: 300
-  logger:
-    init_args:
-      version: cmf7aayi
-      resume: true
 
 model:
   net:
@@ -42,4 +38,4 @@ lr_scheduler:
   class_path: CosineAnnealingLR
   init_args:
     T_max: ${trainer.max_epochs}
-ckpt_path: logs/debug-resume/version_0/fit/checkpoints/last.ckpt
+# ckpt_path: logs/debug-resume/version_0/fit/checkpoints/last.ckpt
