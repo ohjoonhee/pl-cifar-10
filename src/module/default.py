@@ -3,13 +3,14 @@ from torch import nn
 
 import lightning as L
 
+from torchmetrics import Accuracy
 
 class LitCifar10(L.LightningModule):
     def __init__(
         self,
         net: nn.Module,
         loss_module: nn.Module,
-        metric_module: nn.Module,
+        # metric_module: nn.Module,
     ) -> None:
         super().__init__()
         self.save_hyperparameters(ignore=["net", "loss_module", "metric_module"])
@@ -17,7 +18,7 @@ class LitCifar10(L.LightningModule):
         self.net = net
 
         self.loss_module = loss_module
-        self.metric_module = metric_module
+        self.metric_module = Accuracy(task="multiclass", num_classes=10)
 
     def forward(self, x):
         return self.net(x)

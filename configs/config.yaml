@@ -1,6 +1,6 @@
 # lightning.pytorch==2.0.0
-name: debug-batchsizefinder
-version: version_0
+name: dev
+version: v0
 
 seed_everything: 42
 trainer:
@@ -16,9 +16,6 @@ model:
 
   loss_module:
     class_path: CrossEntropyLoss
-
-  metric_module:
-    class_path: Accuracy
 
 data:
   root: data
