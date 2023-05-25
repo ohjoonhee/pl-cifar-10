@@ -64,6 +64,8 @@ class RichCLI(LightningCLI):
 
     def _check_resume(self):
         subcommand = self.config["subcommand"]
+        if subcommand != "fit":
+            return
         save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
@@ -73,8 +75,6 @@ class RichCLI(LightningCLI):
         
         if not osp.exists(log_dir):
             return
-        
-        print("Same")
         
         i = 1
         while osp.exists(osp.join(save_dir, name, version, f"{sub_dir}{i}")):

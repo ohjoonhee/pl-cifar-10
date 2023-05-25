@@ -75,6 +75,8 @@ class RichWandbCLI(RichCLI):
     
     def _check_resume(self):
         subcommand = self.config["subcommand"]
+        if subcommand != "fit":
+            return subcommand
         save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
@@ -85,14 +87,12 @@ class RichWandbCLI(RichCLI):
         if not osp.exists(log_dir):
             return subcommand
         
-        
         i = 1
         while osp.exists(osp.join(save_dir, name, version, f"{sub_dir}{i}")):
             i += 1
             
         prev_sub_dir = sub_dir + (str(i-1) if (i-1) else "")
         sub_dir = sub_dir + str(i)
-        
         
         prev_log_dir = osp.join(save_dir, name, version, prev_sub_dir)
         self.config[subcommand]["ckpt_path"] = osp.join(prev_log_dir,"checkpoints", "last.ckpt")
