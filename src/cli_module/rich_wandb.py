@@ -21,7 +21,6 @@ class RichWandbCLI(RichCLI):
                     "class_path": "lightning.pytorch.loggers.WandbLogger",
                     "init_args": {
                         "project": "pl-cifar-10",
-                        "save_dir": "logs",
                     },
                 },
             }
@@ -114,7 +113,7 @@ class RichWandbCLI(RichCLI):
             return
         # Dividing directories into subcommand (e.g. fit, validate, test, etc...)
         subcommand = self.config["subcommand"]
-        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
+        save_dir = "logs"
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         

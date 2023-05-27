@@ -19,6 +19,7 @@ We assume cwd is project root dir.
 ```bash
 python src/main.py fit -c configs/config.yaml -n debug-fit-run -v debug-version
 ```
+If using `wandb` for logging, change `"project"` key in `cli_module/rich_wandb.py`
 
 #### Automatic Batch Size Finder
 Just add `BatchSizeFinder` callbacks in the config
@@ -33,15 +34,9 @@ python src/main.py fit -c configs/config.yaml --trainer.callbacks+=BatchSizeFind
 ```
 
 #### Resume
-Just add the following arguments and run fit command as usual.
-```yaml
-# configs/config.yaml
-trainer:
-  logger:
-    init_args:
-      version: abcd1234 # Wandb run id of previous one's
-      resume: true
-ckpt_path: my/path/to/checkpoint.ckpt
+Basically all logs are stored in `logs/${name}/${version}/${job_type}` where `${name}` and `${version}` are configured in yaml file or cmdline. 
+`{job_type}` can be one of `fit`, `test`, `validate`, etc.
+
 ```
    
   
@@ -55,7 +50,6 @@ python src/main.py test -c configs/config.yaml -n debug-test-run -v debug-versio
 
 
 ## TODO
-* Check `resume` functionality
 * Check pretrained weight loading
 * Consider multiple optimizer using cases (i.e. GAN)
 * Add instructions in README (on-going)
