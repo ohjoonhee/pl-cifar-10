@@ -25,6 +25,7 @@ class RichWandbCLI(RichCLI):
                 },
             }
         )
+        parser.link_arguments("name", "trainer.logger.init_args.name")
         parser.link_arguments(
             "version", "trainer.logger.init_args.tags", compute_fn=lambda e: [e]
         )
@@ -76,7 +77,7 @@ class RichWandbCLI(RichCLI):
         subcommand = self.config["subcommand"]
         if subcommand != "fit":
             return subcommand
-        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
+        save_dir = "logs"
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         sub_dir = subcommand

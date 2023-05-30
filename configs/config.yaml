@@ -1,6 +1,6 @@
 # lightning.pytorch==2.0.0
 name: dev
-version: v0
+version: v2
 
 seed_everything: 42
 trainer:
@@ -9,20 +9,24 @@ trainer:
   max_epochs: 300
 
 model:
-  net:
-    class_path: Cifar10Resnet18
-    init_args:
-      num_classes: 10
+  class_path: LitCifar10
+  init_args:
+    net:
+      class_path: Cifar10Resnet18
+      init_args:
+        num_classes: 10
 
-  loss_module:
-    class_path: CrossEntropyLoss
+    loss_module:
+      class_path: CrossEntropyLoss
 
 data:
-  root: data
-  batch_size: 128
-  val_split: 0.1
-  transforms:
-    class_path: DefaultTransforms
+  class_path: Cifar10DataModule
+  init_args:
+    root: data
+    batch_size: 128
+    val_split: 0.1
+    transforms:
+      class_path: DefaultTransforms
 
 optimizer:
   class_path: SGD

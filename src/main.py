@@ -1,25 +1,39 @@
+import os
 import torch
 
-from lightning.pytorch.cli import LightningCLI
+import lightning as L
 
-from cli_module.rich import RichCLI
-from cli_module.rich_wandb import RichWandbCLI
-from module.default import LitCifar10
-from dataset.cifar10 import Cifar10DataModule
+try:
+    if os.environ.get("WANDB_DISABLED", False):
+        raise ImportError
+    import wandb
+    from cli_module.rich_wandb import RichWandbCLI
+    CLI = RichWandbCLI
+except:
+    from cli_module.rich import RichCLI
+    CLI = RichCLI
 
+# from module.default import LitCifar10
+# from dataset.cifar10 import Cifar10DataModule
+
+
+import dataset
 import model
+import module
 import transforms
 
 
 def cli_main():
     torch.set_float32_matmul_precision("medium")
 
-    cli = RichWandbCLI(
-        LitCifar10,
-        Cifar10DataModule,
+    cli = CLI(
+        L.LightningModule,
+        L.LightningDataModule,
         parser_kwargs={
             "parser_mode": "omegaconf",
         },
+        subclass_mode_model=True,
+        subclass_mode_data=True,
     )
 
 
