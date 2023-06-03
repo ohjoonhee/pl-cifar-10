@@ -1,0 +1,22 @@
+albumentations==1.3.0
+lightning==2.0.2
+opencv-python-headless==4.7.0.72
+scikit-learn==1.2.2
+torchvision==0.15.1
+typing_extensions==4.5.0  # NECESSARY
+wandb==0.15.3
+
+# jsonargparse[signatures]
+jsonargparse==4.21.1 
+typeshed-client==2.2.0 
+docstring-parser==0.15 
+
+# variable interpolation in configs
+omegaconf==2.2.3
+
+# formatter
+black==23.1.0 
+
+# optional libs.
+# torchinfo==1.7.2
+# torchaudio==2.0.1
