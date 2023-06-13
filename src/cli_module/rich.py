@@ -12,6 +12,7 @@ from lightning.pytorch.callbacks import (
     RichProgressBar,
 )
 from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTheme
+from lightning.pytorch.tuner import Tuner
 
 from lightning.pytorch.cli import LightningCLI
 from lightning.pytorch.cli import LightningArgumentParser
@@ -34,15 +35,12 @@ class RichCLI(LightningCLI):
 
         parser.add_lightning_class_args(LearningRateMonitor, "lr_monitor")
         parser.set_defaults({"lr_monitor.logging_interval": "epoch"})
-        
-        
+
         parser.set_defaults(
             {
                 "trainer.logger": {
                     "class_path": "lightning.pytorch.loggers.TensorBoardLogger",
-                    "init_args": {
-                        "save_dir": "logs"
-                    },
+                    "init_args": {"save_dir": "logs"},
                 },
             }
         )
@@ -54,7 +52,6 @@ class RichCLI(LightningCLI):
         parser.add_argument(
             "--version", "-v", dest="version", action="store", default="version_0"
         )
-
 
     def before_run(self):
         if hasattr(torch, "compile"):
@@ -70,46 +67,51 @@ class RichCLI(LightningCLI):
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         sub_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["sub_dir"]
-        
+
         log_dir = osp.join(save_dir, name, version, sub_dir)
-        
+
         if not osp.exists(log_dir):
             return
-        
+
         i = 1
         while osp.exists(osp.join(save_dir, name, version, f"{sub_dir}{i}")):
             i += 1
-            
-        prev_sub_dir = sub_dir + (str(i-1) if (i-1) else "")
+
+        prev_sub_dir = sub_dir + (str(i - 1) if (i - 1) else "")
         sub_dir = sub_dir + str(i)
-        
+
         self.config[subcommand]["trainer"]["logger"]["init_args"]["sub_dir"] = sub_dir
-        
+
         prev_log_dir = osp.join(save_dir, name, version, prev_sub_dir)
-        self.config[subcommand]["ckpt_path"] = osp.join(prev_log_dir,"checkpoints", "last.ckpt")
-        
-            
+        self.config[subcommand]["ckpt_path"] = osp.join(
+            prev_log_dir, "checkpoints", "last.ckpt"
+        )
 
     def before_instantiate_classes(self) -> None:
         if "subcommand" not in self.config:
             return
         # Dividing directories into subcommand (e.g. fit, validate, test, etc...)
         subcommand = self.config["subcommand"]
-        
-        self.config[subcommand]["trainer"]["logger"]["init_args"]["name"] = self.config[subcommand]["name"]
-        self.config[subcommand]["trainer"]["logger"]["init_args"]["version"] = self.config[subcommand]["version"]
-        self.config[subcommand]["trainer"]["logger"]["init_args"]["sub_dir"] = subcommand
 
-        self._check_resume() 
+        self.config[subcommand]["trainer"]["logger"]["init_args"]["name"] = self.config[
+            subcommand
+        ]["name"]
+        self.config[subcommand]["trainer"]["logger"]["init_args"][
+            "version"
+        ] = self.config[subcommand]["version"]
+        self.config[subcommand]["trainer"]["logger"]["init_args"][
+            "sub_dir"
+        ] = subcommand
+
+        self._check_resume()
 
         save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         sub_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["sub_dir"]
-        
+
         save_dir = osp.join(save_dir, name, version, sub_dir)
-        
+
         self.config[subcommand]["model_ckpt"]["dirpath"] = osp.join(
             save_dir, "checkpoints"
         )
-

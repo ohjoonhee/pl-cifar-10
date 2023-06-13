@@ -5,6 +5,7 @@ import lightning as L
 
 from torchmetrics import Accuracy
 
+
 class LitCifar10(L.LightningModule):
     def __init__(
         self,

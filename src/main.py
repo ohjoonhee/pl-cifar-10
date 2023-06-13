@@ -8,9 +8,11 @@ try:
         raise ImportError
     import wandb
     from cli_module.rich_wandb import RichWandbCLI
+
     CLI = RichWandbCLI
 except:
     from cli_module.rich import RichCLI
+
     CLI = RichCLI
 
 # from module.default import LitCifar10

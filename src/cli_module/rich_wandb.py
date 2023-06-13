@@ -20,7 +20,7 @@ class RichWandbCLI(RichCLI):
                 "trainer.logger": {
                     "class_path": "lightning.pytorch.loggers.WandbLogger",
                     "init_args": {
-                        "project": "pl-cifar-10",
+                        "project": "debug",
                     },
                 },
             }
@@ -72,7 +72,7 @@ class RichWandbCLI(RichCLI):
                 print("Transforms source code added to artifacts!!!")
 
             wandb.log_artifact(artifacts)
-    
+
     def _check_resume(self):
         subcommand = self.config["subcommand"]
         if subcommand != "fit":
@@ -81,29 +81,37 @@ class RichWandbCLI(RichCLI):
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         sub_dir = subcommand
-        
+
         log_dir = osp.join(save_dir, name, version, sub_dir)
-        
+
         if not osp.exists(log_dir):
             return subcommand
-        
+
         i = 1
         while osp.exists(osp.join(save_dir, name, version, f"{sub_dir}{i}")):
             i += 1
-            
-        prev_sub_dir = sub_dir + (str(i-1) if (i-1) else "")
+
+        prev_sub_dir = sub_dir + (str(i - 1) if (i - 1) else "")
         sub_dir = sub_dir + str(i)
-        
+
         prev_log_dir = osp.join(save_dir, name, version, prev_sub_dir)
-        self.config[subcommand]["ckpt_path"] = osp.join(prev_log_dir,"checkpoints", "last.ckpt")
-        wandb_run_file = [e for e in os.listdir(osp.join(prev_log_dir, "wandb", "latest-run")) if ".wandb" in e]
-        
+        self.config[subcommand]["ckpt_path"] = osp.join(
+            prev_log_dir, "checkpoints", "last.ckpt"
+        )
+        wandb_run_file = [
+            e
+            for e in os.listdir(osp.join(prev_log_dir, "wandb", "latest-run"))
+            if ".wandb" in e
+        ]
+
         assert len(wandb_run_file) == 1
 
         wandb_run_file = wandb_run_file[0]
-        wandb_run_id = wandb_run_file.split('.')[0][4:]
-        
-        self.config[subcommand]["trainer"]["logger"]["init_args"]["version"] = wandb_run_id
+        wandb_run_id = wandb_run_file.split(".")[0][4:]
+
+        self.config[subcommand]["trainer"]["logger"]["init_args"][
+            "version"
+        ] = wandb_run_id
         self.config[subcommand]["trainer"]["logger"]["init_args"]["resume"] = "allow"
         print("Resume logging to wandb run:", wandb_run_id)
 
@@ -117,13 +125,11 @@ class RichWandbCLI(RichCLI):
         save_dir = "logs"
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
-        
+
         sub_dir = self._check_resume()
 
         log_dir = osp.join(save_dir, name, version, sub_dir)
-        self.config[subcommand]["trainer"]["logger"]["init_args"][
-            "save_dir"
-        ] = log_dir
+        self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"] = log_dir
 
         self.config[subcommand]["model_ckpt"]["dirpath"] = osp.join(
             log_dir, "checkpoints"
@@ -134,4 +140,6 @@ class RichWandbCLI(RichCLI):
             os.makedirs(log_dir)
 
         # Specifying job_type of wandb.init() for quick grouping
-        self.config[subcommand]["trainer"]["logger"]["init_args"].tags.append(subcommand)
+        self.config[subcommand]["trainer"]["logger"]["init_args"].tags.append(
+            subcommand
+        )
