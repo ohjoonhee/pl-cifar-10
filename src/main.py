@@ -15,9 +15,6 @@ except:
 
     CLI = RichCLI
 
-# from module.default import LitCifar10
-# from dataset.cifar10 import Cifar10DataModule
-
 
 import dataset
 import model

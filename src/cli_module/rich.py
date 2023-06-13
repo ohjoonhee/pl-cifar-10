@@ -1,22 +1,15 @@
-import os
 import os.path as osp
-
-import json
 
 import torch
 
-from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import (
     ModelCheckpoint,
     LearningRateMonitor,
     RichProgressBar,
 )
-from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTheme
-from lightning.pytorch.tuner import Tuner
 
 from lightning.pytorch.cli import LightningCLI
 from lightning.pytorch.cli import LightningArgumentParser
-from jsonargparse import lazy_instance
 
 
 class RichCLI(LightningCLI):
