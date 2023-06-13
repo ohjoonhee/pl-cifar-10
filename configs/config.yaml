@@ -1,6 +1,6 @@
 # lightning.pytorch==2.0.0
-name: dev-lrfind
-version: showcase
+name: dev-resume
+version: v0
 
 seed_everything: 42
 trainer:

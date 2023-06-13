@@ -21,6 +21,7 @@ class RichWandbCLI(RichCLI):
                     "class_path": "lightning.pytorch.loggers.WandbLogger",
                     "init_args": {
                         "project": "debug",
+                        "save_dir": "logs",
                     },
                 },
             }
@@ -77,7 +78,7 @@ class RichWandbCLI(RichCLI):
         subcommand = self.config["subcommand"]
         if subcommand != "fit":
             return subcommand
-        save_dir = "logs"
+        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
         sub_dir = subcommand
@@ -122,9 +123,21 @@ class RichWandbCLI(RichCLI):
             return
         # Dividing directories into subcommand (e.g. fit, validate, test, etc...)
         subcommand = self.config["subcommand"]
-        save_dir = "logs"
+        save_dir = self.config[subcommand]["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config[subcommand]["name"]
         version = self.config[subcommand]["version"]
+
+        # check if save_dir already contains name/version/subcommand
+        if name in save_dir:
+            assert version in save_dir
+
+            paths = save_dir.split(os.sep)
+            name_idx = paths.index(name)
+
+            save_dir = osp.join(*paths[:name_idx])
+            self.config[subcommand]["trainer"]["logger"]["init_args"][
+                "save_dir"
+            ] = save_dir
 
         sub_dir = self._check_resume()
 
