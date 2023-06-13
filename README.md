@@ -33,6 +33,12 @@ Or add them in the cmdline.
 python src/main.py fit -c configs/config.yaml --trainer.callbacks+=BatchSizeFinder
 ```
 
+##### NEW! `tune.py` for lr_find and batch size find
+```bash
+python src/tune.py -c configs/config.yaml
+```
+NOTE: No subcommand in cmdline
+
 #### Resume
 Basically all logs are stored in `logs/${name}/${version}/${job_type}` where `${name}` and `${version}` are configured in yaml file or cmdline. 
 `{job_type}` can be one of `fit`, `test`, `validate`, etc.
