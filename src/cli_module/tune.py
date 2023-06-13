@@ -21,25 +21,25 @@ from jsonargparse import lazy_instance
 
 class TuneCLI(LightningCLI):
     def add_arguments_to_parser(self, parser: LightningArgumentParser) -> None:
-        parser.add_lightning_class_args(RichProgressBar, "rich_progress")
-        parser.set_defaults({"rich_progress.theme.progress_bar": "purple"})
-        parser.add_lightning_class_args(ModelCheckpoint, "model_ckpt")
-        parser.set_defaults(
-            {
-                "model_ckpt.monitor": "val/loss",
-                "model_ckpt.mode": "min",
-                "model_ckpt.save_last": True,
-                "model_ckpt.filename": "best-{epoch:03d}",
-            }
-        )
+        # parser.add_lightning_class_args(RichProgressBar, "rich_progress")
+        # parser.set_defaults({"rich_progress.theme.progress_bar": "purple"})
+        # parser.add_lightning_class_args(ModelCheckpoint, "model_ckpt")
+        # parser.set_defaults(
+        #     {
+        #         "model_ckpt.monitor": "val/loss",
+        #         "model_ckpt.mode": "min",
+        #         "model_ckpt.save_last": True,
+        #         "model_ckpt.filename": "best-{epoch:03d}",
+        #     }
+        # )
 
-        parser.add_lightning_class_args(LearningRateMonitor, "lr_monitor")
-        parser.set_defaults({"lr_monitor.logging_interval": "epoch"})
+        # parser.add_lightning_class_args(LearningRateMonitor, "lr_monitor")
+        # parser.set_defaults({"lr_monitor.logging_interval": "epoch"})
 
         parser.set_defaults(
             {
                 "trainer.logger": {
-                    "class_path": "lightning.pytorch.loggers.TensorBoardLogger",
+                    "class_path": "lightning.pytorch.loggers.CSVLogger",
                     "init_args": {"save_dir": "logs"},
                 },
             }
@@ -60,13 +60,10 @@ class TuneCLI(LightningCLI):
         self.config["trainer"]["logger"]["init_args"]["version"] = self.config[
             "version"
         ]
-        self.config["trainer"]["logger"]["init_args"]["sub_dir"] = "tune"
 
         save_dir = self.config["trainer"]["logger"]["init_args"]["save_dir"]
         name = self.config["name"]
         version = self.config["version"]
-        sub_dir = self.config["trainer"]["logger"]["init_args"]["sub_dir"]
 
-        save_dir = osp.join(save_dir, name, version, sub_dir)
-
-        self.config["model_ckpt"]["dirpath"] = osp.join(save_dir, "checkpoints")
+        save_dir = osp.join(save_dir, name, version, "tune")
+        self.config["trainer"]["logger"]["init_args"]["save_dir"] = save_dir

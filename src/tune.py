@@ -40,9 +40,9 @@ def cli_tune():
     max_batch_sz = tuner.scale_batch_size(cli.model, datamodule=cli.datamodule)
 
     logger = cli.trainer.logger
-    save_dir = osp.join(logger.save_dir, logger.name, logger.version, "tune")
-    fig.savefig(osp.join(save_dir, "lr_find.png"))
-    with open(osp.join(save_dir, "tune_results.txt"), "w") as f:
+
+    fig.savefig(osp.join(logger.save_dir, "lr_find.png"))
+    with open(osp.join(logger.save_dir, "tune_results.txt"), "w") as f:
         f.write("Optimal LR is:\n")
         f.write(f"{best_lr}\n")
 
@@ -53,3 +53,5 @@ def cli_tune():
 
 if __name__ == "__main__":
     cli_tune()
+
+from lightning.pytorch.loggers import CSVLogger
